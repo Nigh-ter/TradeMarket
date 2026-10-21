@@ -1,0 +1,135 @@
+# ============================================================
+#  TradeMarket 2.5.3 配置文件
+#  金额单位：元（内部自动换算为"分"，杜绝浮点误差）
+#  改完配置后输入 /tk reload 生效，无需重启
+#  金额输入支持后缀：1k = 1000，1w = 10000，2m = 2000000
+# ============================================================
+
+config-version: 2
+
+# 语言：zh = 中文（zh_CN），en = 英文（en_US）；也可填自定义语言文件名
+language: zh
+
+economy:
+  # 聊天和界面里显示的货币符号（仅显示，不影响实际金额）
+  currency-symbol: "$"
+  # 交易成功 / 界面点击时是否播放音效
+  sounds-enabled: true
+
+market:
+  # 单价下限 / 上限（元）：超过范围的物品不允许上架
+  min-price: 1.0
+  max-price: 10000000.0
+  # 上架手续费：按 物品总价 的百分比，上架瞬间收取；0 = 不收
+  fee-percent: 0
+  # 手续费上限（元）：0 = 不设上限，防止高价物品手续费爆炸
+  fee-max: 0
+  # 成交税：买家付款后，从卖家收入中按此百分比扣除
+  sale-tax-percent: 2
+  # 每个玩家同时在售的最大商品数
+  max-listings-per-player: 45
+  # 上架后多少天无人购买自动过期，物品退回卖家邮箱
+  listing-expire-days: 14
+  # 定价防手滑：上架单价 与 该物品近期成交均价 偏离超过此倍数时，
+  # 弹出确认界面要求二次确认（防多打/少打一个 0）；0 = 关闭该功能
+  price-confirm-multiplier: 3.0
+  # 禁止上架的物品材质（物品 ID 大写）：技术性/OP 专属物品
+  blacklist-materials:
+    - BEDROCK
+    - BARRIER
+    - COMMAND_BLOCK
+    - CHAIN_COMMAND_BLOCK
+    - REPEATING_COMMAND_BLOCK
+    - STRUCTURE_BLOCK
+    - STRUCTURE_VOID
+    - JIGSAW
+    - DEBUG_STICK
+    - LIGHT
+    - SPAWNER
+
+auction:
+  # 起拍价下限（元）/ 单价上限（元）
+  min-start-price: 1.0
+  max-price: 100000000.0
+  # 最低加价（元）：下一次出价必须至少比当前价高这么多
+  min-increment: 1.0
+  # 发起拍卖手续费：按 起拍价 百分比，发起瞬间收取；0 = 不收
+  fee-percent: 0
+  # 默认拍卖时长（分钟）：/tk auction sell 不填时长时使用
+  default-duration-min: 30
+  # 最大拍卖时长（分钟）：玩家不能发起超过此时长的拍卖
+  max-duration-min: 1440
+  # 每个玩家同时进行的拍卖数量上限
+  max-auctions-per-player: 20
+  # 成交税：拍卖成交后，从卖家收入中按此百分比扣除
+  sale-tax-percent: 2
+  # 防偷拍：结束前 N 秒内有人出价，拍卖自动延长；0 = 关闭
+  anti-snipe-seconds: 30
+  # 触发防偷拍时延长的秒数
+  anti-snipe-extend-seconds: 30
+  # 拍卖发起 / 中标 是否向全服播报（带可点击的 [打开拍卖] 按钮）
+  broadcast-wins: true
+  # 结束前倒计时提醒：可填多个秒数，剩余时间每到其中一个就全服播报一次（带 [打开拍卖] 按钮）
+  # 例如 [60, 30, 10, 5] = 剩 60/30/10/5 秒时各提醒一次；防狙击延长后会重新提醒
+  # 也支持单个数字（如 60）；填 [] = 关闭
+  countdown-seconds:
+    - 60
+    - 30
+    - 10
+
+order:
+  # 发布求购时是否向全服播报（带可点击的 [打开求购] 按钮）
+  broadcast-created: true
+  # 每个玩家同时进行的求购单数量上限
+  max-per-player: 5
+  # 单张求购单的最大收购数量
+  max-amount: 1000
+  # LuckPerms 分组差异求购上限（组名小写 -> 上限；未列出的组用 max-per-player）
+  # 例：/lp user 玩家名 parent set vip 把玩家加入 vip 组后，该玩家可同时发 10 张
+  group-max-per-player:
+    vip: 10
+  # 成交税：卖家向求购单出售物品时，从收入中按此百分比扣除
+  sale-tax-percent: 2
+  # 求购申请（托管验货）超时时间（小时），超时物品自动退回卖家；0 = 永不超时
+  offer-timeout-hours: 24
+  # 卖家主动取消托管申请时收取的手续费（元）；超时/被拒绝退回不扣费
+  offer-cancel-fee: 1000
+
+# ============ 世界限制 ============
+# 默认全部禁止交易命令的世界（OP 默认豁免）
+world-limits:
+  # OP / 拥有 trademarket.admin 权限的玩家是否豁免世界限制
+  op-exempt: true
+  # 全禁世界：这些世界里 /tk 的全部交易功能不可用
+  disabled-worlds:
+    - lobby
+  # 分世界白名单（可选）：世界名 -> 该世界允许的子命令
+  # 子命令名：market(市场) sell(上架) my(我的在售) order(发布求购) orders(求购大厅)
+  #          offers(我的托管) auction(拍卖) mailbox(邮箱) send(玩家互发)
+  # 例：想让 lobby 里也能打开邮箱：
+  # allow:
+  #   lobby: [mailbox]
+  allow: {}
+
+advanced:
+  # 自定义物品来源识别（ItemsAdder / Oraxen / MMOItems / MythicMobs）：
+  # 记录物品来自哪个插件（item_provider 列），求购单按来源精确匹配
+  custom-item-detect: true
+  # 求购单发布多少天无人成交自动过期，托管金退回买家
+  order-expire-days: 7
+  # 数据瘦身：交易流水（tm_txlog）保留天数，过期自动删除
+  txlog-keep-days: 30
+  # 数据瘦身：已完成（售出/取消/过期）的商品和拍卖行保留天数
+  terminal-keep-days: 14
+  # 数据瘦身：成交历史记录保留天数（同时影响近期成交均价的参考范围）
+  sales-keep-days: 30
+
+mailbox:
+  # 玩家上线时是否提示未领取邮件数量
+  notify-on-join: true
+  # 已领取的邮件保留 N 天后自动清理；未领取的邮件永不清理
+  purge-claimed-days: 7
+  # 未领取邮件超过 N 天时，上线时再次提醒；0 = 关闭
+  old-remind-days: 7
+  # 玩家互发邮件手续费（元/封）；0 = 免费；拥有 trademarket.mail.nofee 权限的玩家豁免
+  player-fee: 0

@@ -1,0 +1,34 @@
+name: TradeMarket
+version: '1.0.0'
+main: com.trademarket.TradeMarketPlugin
+api-version: '1.21'
+author: Nigh-ter
+description: 全球市场 / 竞价拍卖 / 智能邮箱 —— 主线程串行、SQLite 同步落库、零打包依赖的交易生态插件
+folia-supported: false
+
+softdepend:
+  - Vault
+  - LuckPerms
+
+commands:
+  market:
+    description: TradeMarket 主命令
+    usage: /market help
+    aliases: [tk]
+
+permissions:
+  trademarket.use:
+    description: 使用交易市场基础功能
+    default: true
+  trademarket.sell:
+    description: 在全球市场出售 / 管理自己的在售商品
+    default: true
+  trademarket.auction:
+    description: 使用竞价拍卖
+    default: true
+  trademarket.mailbox:
+    description: 打开智能邮箱
+    default: true
+  trademarket.admin:
+    description: 管理员命令（reload / admin）
+    default: op
